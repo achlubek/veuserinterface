@@ -24,7 +24,7 @@ namespace VEngine
             auto vert = vulkan->getVulkanShaderFactory()->build(VulkanShaderModuleType::Vertex, "ui.vert.spv");
             auto frag = vulkan->getVulkanShaderFactory()->build(VulkanShaderModuleType::Fragment, "ui.frag.spv");
 
-            auto stage = vulkan->getVulkanRenderStageFactory()->build(width, height, { vert, frag }, { layout },
+            stage = vulkan->getVulkanRenderStageFactory()->build(width, height, { vert, frag }, { layout },
                 { outputImage->getAttachment(VulkanAttachmentBlending::Alpha, true,{ { 0.5f, 0.5f, 0.5f, 1.f } }, false) });
 
             mouse->onMouseDown.add([&](int a) {
