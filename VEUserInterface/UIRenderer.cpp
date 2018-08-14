@@ -11,8 +11,8 @@ namespace VEngine
         using namespace VEngine::Renderer;
         using namespace VEngine::Input;
 
-        UIRenderer::UIRenderer(VulkanToolkit* vulkan, Mouse* mouse, VulkanImage* outputImage, int width, int height) :
-            vulkan(vulkan), width(width), height(height), mouse(mouse)
+        UIRenderer::UIRenderer(VulkanToolkit* vulkan, Mouse* imouse, VulkanImage* outputImage, int width, int height) :
+            vulkan(vulkan), width(width), height(height), mouse(imouse)
         {
             unsigned char * emptytexture = new unsigned char[4]{ (unsigned char)0x255, (unsigned char)0x255, (unsigned char)0x255, (unsigned char)0x255 };
             dummyTexture = vulkan->getVulkanImageFactory()->build(1, 1, 4, emptytexture);
@@ -25,7 +25,7 @@ namespace VEngine
             auto frag = vulkan->getVulkanShaderFactory()->build(VulkanShaderModuleType::Fragment, "ui.frag.spv");
 
             stage = vulkan->getVulkanRenderStageFactory()->build(width, height, { vert, frag }, { layout },
-                { outputImage->getAttachment(VulkanAttachmentBlending::Alpha, true,{ { 0.5f, 0.5f, 0.5f, 1.f } }, false) });
+                { outputImage->getAttachment(VulkanAttachmentBlending::Alpha, true,{ { 0.0f, 0.0f, 0.0f, 0.0f } }, false) });
 
             mouse->onMouseDown.add([&](int a) {
                 auto cursor = mouse->getCursorPosition();
