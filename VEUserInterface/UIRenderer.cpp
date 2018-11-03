@@ -70,6 +70,7 @@ namespace VEngine
             }
 
             stage->endDrawing();
+            stage->submitNoSemaphores({});
         }
 
         void UIRenderer::addDrawable(UIAbsDrawable * drawable)

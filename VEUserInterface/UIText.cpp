@@ -12,7 +12,7 @@ namespace VEngine
         UIText::UIText(UIRenderer* irenderer, float x, float y, UIColor color, std::string fontmediakey, int ifontsize, std::string text)
             : UIAbsDrawable(irenderer, x, y, 0, 0, color), fontsize(ifontsize)
         {
-            Media::readBinary(fontmediakey, &fontBuffer);
+            irenderer->getToolkit()->getMedia()->readBinary(fontmediakey, &fontBuffer);
             font = new stbtt_fontinfo();
             if (!stbtt_InitFont(font, fontBuffer, 0))
             {
