@@ -3,18 +3,18 @@ namespace VEngine
 {
     namespace UserInterface
     {
-        class UIAbsDrawable;
+        class IDrawable;
         class UIRenderer
         {
         public:
-            UIRenderer(VEngine::Renderer::VulkanToolkit* vulkan, VEngine::Input::Mouse* mouse, VEngine::Renderer::VulkanImage* outputImage, int width, int height);
+            UIRenderer(VEngine::Renderer::VulkanToolkit* vulkan, VEngine::Renderer::VulkanImage* outputImage, int width, int height);
             ~UIRenderer();
             void draw();
-            void addDrawable(UIAbsDrawable* drawable);
-            void removeDrawable(UIAbsDrawable* drawable);
-            std::vector<UIAbsDrawable*> getDrawables();
+            void addDrawable(IDrawable* drawable);
+            void removeDrawable(IDrawable* drawable);
+            std::vector<IDrawable*> getDrawables();
             void removeAllDrawables();
-            std::vector<UIAbsDrawable*> rayCast(float x, float y);
+            std::vector<IDrawable*> rayCast(float x, float y);
 
             VEngine::Renderer::VulkanToolkit* getToolkit();
             uint32_t getWidth();
@@ -25,7 +25,7 @@ namespace VEngine
 
         private:
             VEngine::Renderer::VulkanRenderStage * stage{ nullptr };
-            std::vector<UIAbsDrawable*> drawables;
+            std::vector<IDrawable*> drawables;
             VEngine::Input::Mouse* mouse;
             VEngine::Renderer::VulkanToolkit* vulkan{ nullptr };
             uint32_t width{ 0 }, height{ 0 };

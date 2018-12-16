@@ -11,13 +11,14 @@ namespace VEngine
         using namespace VEngine::Renderer;
         using namespace VEngine::Input;
 
-        UIRenderer::UIRenderer(VulkanToolkit* vulkan, Mouse* imouse, VulkanImage* outputImage, int width, int height) :
-            vulkan(vulkan), width(width), height(height), mouse(imouse)
+        UIRenderer::UIRenderer(VulkanToolkit* vulkan, VulkanImage* outputImage, int width, int height) :
+            vulkan(vulkan), width(width), height(height)
         {
             unsigned char * emptytexture = new unsigned char[4]{ (unsigned char)0x255, (unsigned char)0x255, (unsigned char)0x255, (unsigned char)0x255 };
             dummyTexture = vulkan->getVulkanImageFactory()->build(1, 1, 4, emptytexture);
 
             layout = vulkan->getVulkanDescriptorSetLayoutFactory()->build();
+            layout->addField(VulkanDescriptorSetFieldType::FieldTypeUniformBuffer, VulkanDescriptorSetFieldStage::FieldStageAll);
             layout->addField(VulkanDescriptorSetFieldType::FieldTypeUniformBuffer, VulkanDescriptorSetFieldStage::FieldStageAll);
             layout->addField(VulkanDescriptorSetFieldType::FieldTypeSampler, VulkanDescriptorSetFieldStage::FieldStageFragment);
 
@@ -26,22 +27,6 @@ namespace VEngine
 
             stage = vulkan->getVulkanRenderStageFactory()->build(width, height, { vert, frag }, { layout },
                 { outputImage->getAttachment(VulkanAttachmentBlending::Alpha, true,{ { 0.0f, 0.0f, 0.0f, 0.0f } }, false) });
-
-            mouse->onMouseDown.add([&](int a) {
-                auto cursor = mouse->getCursorPosition();
-                auto hits = rayCast(static_cast<float>(std::get<0>(cursor)) / width, static_cast<float>(std::get<1>(cursor)) / height);
-                if (hits.size() > 0) {
-                    hits[0]->onMouseDown.invoke(0);
-                }
-            });
-
-            mouse->onMouseUp.add([&](int a) {
-                auto cursor = mouse->getCursorPosition();
-                auto hits = rayCast(static_cast<float>(std::get<0>(cursor)) / width, static_cast<float>(std::get<1>(cursor)) / height);
-                if (hits.size() > 0) {
-                    hits[0]->onMouseUp.invoke(0);
-                }
-            });
         }
 
 
@@ -49,8 +34,8 @@ namespace VEngine
 
             for (int a = 0; a < drawables.size(); a++) {
                 for (int b = 0; b < drawables.size(); b++) {
-                    auto index_a = drawables[a]->zIndex;
-                    auto index_b = drawables[b]->zIndex;
+                    auto index_a = drawables[a]->getZIndex();
+                    auto index_b = drawables[b]->getZIndex();
                     if (index_a > index_b) {
                         auto tmp = drawables[b];
                         drawables[b] = drawables[a];
@@ -73,12 +58,12 @@ namespace VEngine
             stage->submitNoSemaphores({});
         }
 
-        void UIRenderer::addDrawable(UIAbsDrawable * drawable)
+        void UIRenderer::addDrawable(IDrawable * drawable)
         {
             drawables.push_back(drawable);
         }
 
-        void UIRenderer::removeDrawable(UIAbsDrawable * drawable)
+        void UIRenderer::removeDrawable(IDrawable * drawable)
         {
             auto found = std::find(drawables.begin(), drawables.end(), drawable);
             if (found != drawables.end()) {
@@ -86,7 +71,7 @@ namespace VEngine
             }
         }
 
-        std::vector<UIAbsDrawable*> UIRenderer::getDrawables()
+        std::vector<IDrawable*> UIRenderer::getDrawables()
         {
             return drawables;
         }
@@ -96,15 +81,15 @@ namespace VEngine
             drawables.clear();
         }
 
-        std::vector<UIAbsDrawable*> UIRenderer::rayCast(float x, float y)
+        std::vector<IDrawable*> UIRenderer::rayCast(float x, float y)
         {
-            auto result = std::vector<UIAbsDrawable*>();
+            auto result = std::vector<IDrawable*>();
             for (int a = 0; a < drawables.size(); a++) {
                 if (
-                    x > drawables[a]->x
-                    && x < (drawables[a]->x + drawables[a]->width)
-                    && y > drawables[a]->y
-                    && y < (drawables[a]->y + drawables[a]->height)) {
+                    x > drawables[a]->getX()
+                    && x < (drawables[a]->getX() + drawables[a]->getWidth())
+                    && y > drawables[a]->getY()
+                    && y < (drawables[a]->getY() + drawables[a]->getHeight())) {
                     result.push_back(drawables[a]);
                 }
             }

@@ -13,7 +13,8 @@ namespace VEngine
         {
             set = renderer->getSetLayout()->generateDescriptorSet();
             set->bindBuffer(0, dataBuffer);
-            set->bindImageViewSampler(1, texture);
+            set->bindBuffer(1, customBuffer);
+            set->bindImageViewSampler(2, texture);
         }
 
 

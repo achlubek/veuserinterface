@@ -12,7 +12,8 @@ namespace VEngine
         {
             set = renderer->getSetLayout()->generateDescriptorSet();
             set->bindBuffer(0, dataBuffer);
-            set->bindImageViewSampler(1, renderer->getDummyTexture());
+            set->bindBuffer(1, customBuffer);
+            set->bindImageViewSampler(2, renderer->getDummyTexture());
         }
 
         UIBox::~UIBox()

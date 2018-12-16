@@ -164,7 +164,8 @@ namespace VEngine
             if (texture != nullptr) delete texture;
             texture = renderer->getToolkit()->getVulkanImageFactory()->build(nx, maxy, 1, (void*)bitmap);
             set->bindBuffer(0, dataBuffer);
-            set->bindImageViewSampler(1, texture);
+            set->bindBuffer(1, customBuffer);
+            set->bindImageViewSampler(2, texture);
 
             // delete[] bitmap; // stb deletes
         }

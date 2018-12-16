@@ -1,4 +1,5 @@
 #pragma once
+#include "IDrawable.h"
 #include "UIAbsDrawable.h"
 #include "UIBitmap.h"
 #include "UIBox.h"
