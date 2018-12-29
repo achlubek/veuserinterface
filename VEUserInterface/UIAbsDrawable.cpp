@@ -7,13 +7,12 @@ namespace VEngine
     namespace UserInterface
     {
         using namespace VEngine::Renderer;
-        using namespace VEngine::Utilities;
 
         UIAbsDrawable::UIAbsDrawable(UIRenderer* irenderer, float ix, float iy, float iwidth, float iheight, UIColor icolor)
             : renderer(irenderer), x(ix), y(iy), width(iwidth), height(iheight), color(icolor)
         {
-            dataBuffer = renderer->getToolkit()->getVulkanBufferFactory()->build(VulkanBufferType::BufferTypeUniform, 1024);
-            customBuffer = renderer->getToolkit()->getVulkanBufferFactory()->build(VulkanBufferType::BufferTypeUniform, 16 * 1024);
+            dataBuffer = renderer->getToolkit()->getBufferFactory()->build(VEngineBufferType::BufferTypeUniform, 1024);
+            customBuffer = renderer->getToolkit()->getBufferFactory()->build(VEngineBufferType::BufferTypeUniform, 16 * 1024);
         }
 
         UIAbsDrawable::~UIAbsDrawable()
@@ -23,7 +22,7 @@ namespace VEngine
             delete set;
         }
 
-        void UIAbsDrawable::draw(VulkanRenderStage * stage)
+        void UIAbsDrawable::draw(RenderStageInterface * stage)
         {
             if (width == 0 || height == 0) return;
             stage->setSets({ set });
@@ -60,7 +59,7 @@ namespace VEngine
             return color;
         }
 
-        VEngine::Renderer::VulkanGenericBuffer* UIAbsDrawable::getCustomBuffer()
+        VEngine::Renderer::GenericBufferInterface* UIAbsDrawable::getCustomBuffer()
         {
             return customBuffer;
         }

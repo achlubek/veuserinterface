@@ -8,7 +8,7 @@ namespace VEngine
     namespace UserInterface
     {
         using namespace VEngine::Renderer;
-        UIBitmap::UIBitmap(UIRenderer* irenderer, float x, float y, float width, float height, VulkanImage* itexture, UIColor color)
+        UIBitmap::UIBitmap(UIRenderer* irenderer, float x, float y, float width, float height, ImageInterface* itexture, UIColor color)
             : UIAbsDrawable(irenderer, x, y, width, height, color), texture(itexture)
         {
             set = renderer->getSetLayout()->generateDescriptorSet();
@@ -24,48 +24,50 @@ namespace VEngine
 
         void UIBitmap::updateBuffer()
         {
-            VulkanBinaryBufferBuilder bb = VulkanBinaryBufferBuilder();
+            size_t offset = 0;
+            void* data;
+            dataBuffer->map(0, dataBuffer->getSize(), &data);
+
+            #define emplaceFloat(val) static_cast<float*>(data)[offset] = val; offset++
+            #define emplaceInt(val) static_cast<int32_t*>(data)[offset] = val; offset++
 
             if (horizontalAlignment == HorizontalAlignment::left) {
-                bb.emplaceFloat32(x);
+                emplaceFloat(x);
             }
             else if (horizontalAlignment == HorizontalAlignment::center) {
-                bb.emplaceFloat32(x - 0.5f * width);
+                emplaceFloat(x - 0.5f * width);
             }
             else if (horizontalAlignment == HorizontalAlignment::right) {
-                bb.emplaceFloat32(x - width);
+                emplaceFloat(x - width);
             }
 
             if (verticalAlignment == VerticalAlignment::top) {
-                bb.emplaceFloat32(y);
+                emplaceFloat(y);
             }
             else if (verticalAlignment == VerticalAlignment::center) {
-                bb.emplaceFloat32(y - 0.5f * height);
+                emplaceFloat(y - 0.5f * height);
             }
             else if (verticalAlignment == VerticalAlignment::bottom) {
-                bb.emplaceFloat32(y - height);
+                emplaceFloat(y - height);
             }
-            bb.emplaceFloat32(width);
-            bb.emplaceFloat32(height);
+            emplaceFloat(width);
+            emplaceFloat(height);
 
-            bb.emplaceFloat32(color.red);
-            bb.emplaceFloat32(color.green);
-            bb.emplaceFloat32(color.blue);
-            bb.emplaceFloat32(color.alpha);
+            emplaceFloat(color.red);
+            emplaceFloat(color.green);
+            emplaceFloat(color.blue);
+            emplaceFloat(color.alpha);
 
-            bb.emplaceFloat32(0.0f);
-            bb.emplaceFloat32(0.0f);
-            bb.emplaceFloat32(1.0f);
-            bb.emplaceFloat32(1.0f);
+            emplaceFloat(0.0f);
+            emplaceFloat(0.0f);
+            emplaceFloat(1.0f);
+            emplaceFloat(1.0f);
 
-            bb.emplaceInt32(2);
-            bb.emplaceInt32(2);
-            bb.emplaceInt32(2);
-            bb.emplaceInt32(2);
+            emplaceInt(2);
+            emplaceInt(2);
+            emplaceInt(2);
+            emplaceInt(2);
 
-            void* data;
-            dataBuffer->map(0, bb.buffer.size(), &data);
-            memcpy(data, bb.getPointer(), bb.buffer.size());
             dataBuffer->unmap();
         }
     }

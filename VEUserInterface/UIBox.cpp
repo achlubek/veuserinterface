@@ -22,30 +22,33 @@ namespace VEngine
 
         void UIBox::updateBuffer()
         {
-            VulkanBinaryBufferBuilder bb = VulkanBinaryBufferBuilder();
-            bb.emplaceFloat32(x);
-            bb.emplaceFloat32(y);
-            bb.emplaceFloat32(width);
-            bb.emplaceFloat32(height);
-
-            bb.emplaceFloat32(color.red);
-            bb.emplaceFloat32(color.green);
-            bb.emplaceFloat32(color.blue);
-            bb.emplaceFloat32(color.alpha);
-
-            bb.emplaceFloat32(0.0f);
-            bb.emplaceFloat32(0.0f);
-            bb.emplaceFloat32(0.0f);
-            bb.emplaceFloat32(0.0f);
-
-            bb.emplaceInt32(1);
-            bb.emplaceInt32(1);
-            bb.emplaceInt32(1);
-            bb.emplaceInt32(1);
-
+            size_t offset = 0;
             void* data;
-            dataBuffer->map(0, bb.buffer.size(), &data);
-            memcpy(data, bb.getPointer(), bb.buffer.size());
+            dataBuffer->map(0, dataBuffer->getSize(), &data);
+
+            #define emplaceFloat(val) static_cast<float*>(data)[offset] = val; offset++
+            #define emplaceInt(val) static_cast<int32_t*>(data)[offset] = val; offset++
+
+            emplaceFloat(x);
+            emplaceFloat(y);
+            emplaceFloat(width);
+            emplaceFloat(height);
+
+            emplaceFloat(color.red);
+            emplaceFloat(color.green);
+            emplaceFloat(color.blue);
+            emplaceFloat(color.alpha);
+
+            emplaceFloat(0.0f);
+            emplaceFloat(0.0f);
+            emplaceFloat(0.0f);
+            emplaceFloat(0.0f);
+
+            emplaceInt(1);
+            emplaceInt(1);
+            emplaceInt(1);
+            emplaceInt(1);
+
             dataBuffer->unmap();
         }
     }

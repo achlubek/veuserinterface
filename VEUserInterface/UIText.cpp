@@ -32,49 +32,51 @@ namespace VEngine
 
         void UIText::updateBuffer()
         {
-            VulkanBinaryBufferBuilder bb = VulkanBinaryBufferBuilder();
+            size_t offset = 0;
+            void* data;
+            dataBuffer->map(0, dataBuffer->getSize(), &data);
+
+            #define emplaceFloat(val) static_cast<float*>(data)[offset] = val; offset++
+            #define emplaceInt(val) static_cast<int32_t*>(data)[offset] = val; offset++
 
             if (horizontalAlignment == HorizontalAlignment::left) {
-                bb.emplaceFloat32(x);
+                emplaceFloat(x);
             }
             else if (horizontalAlignment == HorizontalAlignment::center) {
-                bb.emplaceFloat32(x - 0.5f * width);
+                emplaceFloat(x - 0.5f * width);
             }
             else if (horizontalAlignment == HorizontalAlignment::right) {
-                bb.emplaceFloat32(x - width);
+                emplaceFloat(x - width);
             }
 
             if (verticalAlignment == VerticalAlignment::top) {
-                bb.emplaceFloat32(y);
+                emplaceFloat(y);
             }
             else if (verticalAlignment == VerticalAlignment::center) {
-                bb.emplaceFloat32(y - 0.5f * height);
+                emplaceFloat(y - 0.5f * height);
             }
             else if (verticalAlignment == VerticalAlignment::bottom) {
-                bb.emplaceFloat32(y - height);
+                emplaceFloat(y - height);
             }
 
-            bb.emplaceFloat32(width);
-            bb.emplaceFloat32(height);
+            emplaceFloat(width);
+            emplaceFloat(height);
 
-            bb.emplaceFloat32(color.red);
-            bb.emplaceFloat32(color.green);
-            bb.emplaceFloat32(color.blue);
-            bb.emplaceFloat32(color.alpha);
+            emplaceFloat(color.red);
+            emplaceFloat(color.green);
+            emplaceFloat(color.blue);
+            emplaceFloat(color.alpha);
 
-            bb.emplaceFloat32(0.0f);
-            bb.emplaceFloat32(0.0f);
-            bb.emplaceFloat32(1.0f);
-            bb.emplaceFloat32(1.0f);
+            emplaceFloat(0.0f);
+            emplaceFloat(0.0f);
+            emplaceFloat(1.0f);
+            emplaceFloat(1.0f);
 
-            bb.emplaceInt32(3);
-            bb.emplaceInt32(3);
-            bb.emplaceInt32(3);
-            bb.emplaceInt32(3);
+            emplaceInt(3);
+            emplaceInt(3);
+            emplaceInt(3);
+            emplaceInt(3);
 
-            void* data;
-            dataBuffer->map(0, bb.buffer.size(), &data);
-            memcpy(data, bb.getPointer(), bb.buffer.size());
             dataBuffer->unmap();
         }
 
@@ -162,7 +164,7 @@ namespace VEngine
             height = (float)maxy / (float)renderer->getHeight();
 
             if (texture != nullptr) delete texture;
-            texture = renderer->getToolkit()->getVulkanImageFactory()->build(nx, maxy, 1, (void*)bitmap);
+            texture = renderer->getToolkit()->getImageFactory()->build(nx, maxy, 1, (void*)bitmap);
             set->bindBuffer(0, dataBuffer);
             set->bindBuffer(1, customBuffer);
             set->bindImageViewSampler(2, texture);

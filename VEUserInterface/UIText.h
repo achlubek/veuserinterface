@@ -10,7 +10,7 @@ namespace VEngine
         public:
             UIText(UIRenderer* renderer, float x, float y, UIColor color, std::string fontmediakey, int ifontsize, std::string text);
             ~UIText();
-            VEngine::Renderer::VulkanImage* texture{ nullptr };
+            VEngine::Renderer::ImageInterface* texture{ nullptr };
             stbtt_fontinfo* font;
             unsigned char* fontBuffer;
             int fontsize = 64;

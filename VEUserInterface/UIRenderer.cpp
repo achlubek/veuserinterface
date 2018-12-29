@@ -11,22 +11,22 @@ namespace VEngine
         using namespace VEngine::Renderer;
         using namespace VEngine::Input;
 
-        UIRenderer::UIRenderer(VulkanToolkit* vulkan, VulkanImage* outputImage, int width, int height) :
+        UIRenderer::UIRenderer(VulkanToolkit* vulkan, ImageInterface* outputImage, int width, int height) :
             vulkan(vulkan), width(width), height(height)
         {
             unsigned char * emptytexture = new unsigned char[4]{ (unsigned char)0x255, (unsigned char)0x255, (unsigned char)0x255, (unsigned char)0x255 };
-            dummyTexture = vulkan->getVulkanImageFactory()->build(1, 1, 4, emptytexture);
+            dummyTexture = vulkan->getImageFactory()->build(1, 1, 4, emptytexture);
 
-            layout = vulkan->getVulkanDescriptorSetLayoutFactory()->build();
-            layout->addField(VulkanDescriptorSetFieldType::FieldTypeUniformBuffer, VulkanDescriptorSetFieldStage::FieldStageAll);
-            layout->addField(VulkanDescriptorSetFieldType::FieldTypeUniformBuffer, VulkanDescriptorSetFieldStage::FieldStageAll);
-            layout->addField(VulkanDescriptorSetFieldType::FieldTypeSampler, VulkanDescriptorSetFieldStage::FieldStageFragment);
+            layout = vulkan->getDescriptorSetLayoutFactory()->build();
+            layout->addField(VEngineDescriptorSetFieldType::FieldTypeUniformBuffer, VEngineDescriptorSetFieldStage::FieldStageAll);
+            layout->addField(VEngineDescriptorSetFieldType::FieldTypeUniformBuffer, VEngineDescriptorSetFieldStage::FieldStageAll);
+            layout->addField(VEngineDescriptorSetFieldType::FieldTypeSampler, VEngineDescriptorSetFieldStage::FieldStageFragment);
 
-            auto vert = vulkan->getVulkanShaderFactory()->build(VulkanShaderModuleType::Vertex, "ui.vert.spv");
-            auto frag = vulkan->getVulkanShaderFactory()->build(VulkanShaderModuleType::Fragment, "ui.frag.spv");
+            auto vert = vulkan->getShaderFactory()->build(VEngineShaderModuleType::Vertex, "ui.vert.spv");
+            auto frag = vulkan->getShaderFactory()->build(VEngineShaderModuleType::Fragment, "ui.frag.spv");
 
-            stage = vulkan->getVulkanRenderStageFactory()->build(width, height, { vert, frag }, { layout },
-                { outputImage->getAttachment(VulkanAttachmentBlending::Alpha, true,{ { 0.0f, 0.0f, 0.0f, 0.0f } }, false) });
+            stage = vulkan->getRenderStageFactory()->build(width, height, { vert, frag }, { layout },
+                { outputImage->getAttachment(VEngineAttachmentBlending::Alpha, true,{ { 0.0f, 0.0f, 0.0f, 0.0f } }, false) });
         }
 
 
@@ -111,12 +111,12 @@ namespace VEngine
             return height;
         }
 
-        VulkanDescriptorSetLayout * UIRenderer::getSetLayout()
+        DescriptorSetLayoutInterface * UIRenderer::getSetLayout()
         {
             return layout;
         }
 
-        VulkanImage * UIRenderer::getDummyTexture()
+        ImageInterface * UIRenderer::getDummyTexture()
         {
             return dummyTexture;
         }

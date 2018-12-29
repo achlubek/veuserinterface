@@ -7,10 +7,11 @@ namespace VEngine
         class UIBitmap : public UIAbsDrawable
         {
         public:
-            UIBitmap(UIRenderer* renderer, float x, float y, float width, float height, VEngine::Renderer::VulkanImage* texture, UIColor color);
+            UIBitmap(UIRenderer* renderer, float x, float y, float width, float height, VEngine::Renderer::ImageInterface* texture, UIColor color);
             ~UIBitmap();
-            VEngine::Renderer::VulkanImage* texture{ nullptr };
             void updateBuffer();
+        private:
+            VEngine::Renderer::ImageInterface* texture{ nullptr };
         };
 
     }

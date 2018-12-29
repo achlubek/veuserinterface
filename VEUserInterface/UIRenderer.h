@@ -7,7 +7,7 @@ namespace VEngine
         class UIRenderer
         {
         public:
-            UIRenderer(VEngine::Renderer::VulkanToolkit* vulkan, VEngine::Renderer::VulkanImage* outputImage, int width, int height);
+            UIRenderer(VEngine::Renderer::VulkanToolkit* vulkan, VEngine::Renderer::ImageInterface* outputImage, int width, int height);
             ~UIRenderer();
             void draw();
             void addDrawable(IDrawable* drawable);
@@ -19,18 +19,18 @@ namespace VEngine
             VEngine::Renderer::VulkanToolkit* getToolkit();
             uint32_t getWidth();
             uint32_t getHeight();
-            VEngine::Renderer::VulkanDescriptorSetLayout* getSetLayout();
-            VEngine::Renderer::VulkanImage* getDummyTexture();
+            VEngine::Renderer::DescriptorSetLayoutInterface* getSetLayout();
+            VEngine::Renderer::ImageInterface* getDummyTexture();
 
 
         private:
-            VEngine::Renderer::VulkanRenderStage * stage{ nullptr };
+            VEngine::Renderer::RenderStageInterface * stage{ nullptr };
             std::vector<IDrawable*> drawables;
-            VEngine::Input::Mouse* mouse;
+           // VEngine::Input::MouseInterface* mouse;
             VEngine::Renderer::VulkanToolkit* vulkan{ nullptr };
             uint32_t width{ 0 }, height{ 0 };
-            VEngine::Renderer::VulkanDescriptorSetLayout* layout{ nullptr };
-            VEngine::Renderer::VulkanImage* dummyTexture;
+            VEngine::Renderer::DescriptorSetLayoutInterface* layout{ nullptr };
+            VEngine::Renderer::ImageInterface* dummyTexture;
         };
 
     }

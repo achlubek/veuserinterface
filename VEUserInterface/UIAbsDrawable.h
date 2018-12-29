@@ -1,7 +1,7 @@
 #pragma once
 #include "UIColor.h"
 #include "IDrawable.h"
-#include <Utilities/EventHandler.h>
+
 namespace VEngine
 {
     namespace UserInterface
@@ -18,7 +18,7 @@ namespace VEngine
             enum class VerticalAlignment { top, center, bottom };
 
             virtual void updateBuffer() = 0;
-            void draw(VEngine::Renderer::VulkanRenderStage* stage);
+            void draw(VEngine::Renderer::RenderStageInterface* stage);
 
             virtual float getX() override;
             virtual float getY() override;
@@ -26,7 +26,7 @@ namespace VEngine
             virtual float getWidth() override;
             virtual float getHeight() override;
             virtual UIColor getColor() override;
-            virtual VEngine::Renderer::VulkanGenericBuffer* getCustomBuffer() override;
+            virtual VEngine::Renderer::GenericBufferInterface* getCustomBuffer() override;
 
             virtual void setX(float value) override;
             virtual void setY(float value) override;
@@ -42,9 +42,9 @@ namespace VEngine
             UIColor color{ UIColor(0.0, 0.0, 0.0, 0.0) };
 
             UIRenderer* renderer{ nullptr };
-            VEngine::Renderer::VulkanDescriptorSet* set;
-            VEngine::Renderer::VulkanGenericBuffer* dataBuffer{ nullptr };
-            VEngine::Renderer::VulkanGenericBuffer* customBuffer{ nullptr };
+            VEngine::Renderer::DescriptorSetInterface* set;
+            VEngine::Renderer::GenericBufferInterface* dataBuffer{ nullptr };
+            VEngine::Renderer::GenericBufferInterface* customBuffer{ nullptr };
 
             HorizontalAlignment horizontalAlignment = HorizontalAlignment::left;
             VerticalAlignment verticalAlignment = VerticalAlignment::top;
