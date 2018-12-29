@@ -11,21 +11,21 @@ namespace VEngine
         using namespace VEngine::Renderer;
         using namespace VEngine::Input;
 
-        UIRenderer::UIRenderer(VulkanToolkit* vulkan, ImageInterface* outputImage, int width, int height) :
-            vulkan(vulkan), width(width), height(height)
+        UIRenderer::UIRenderer(ToolkitInterface* toolkit, ImageInterface* outputImage, int width, int height) :
+            toolkit(toolkit), width(width), height(height)
         {
             unsigned char * emptytexture = new unsigned char[4]{ (unsigned char)0x255, (unsigned char)0x255, (unsigned char)0x255, (unsigned char)0x255 };
-            dummyTexture = vulkan->getImageFactory()->build(1, 1, 4, emptytexture);
+            dummyTexture = toolkit->getImageFactory()->build(1, 1, 4, emptytexture);
 
-            layout = vulkan->getDescriptorSetLayoutFactory()->build();
+            layout = toolkit->getDescriptorSetLayoutFactory()->build();
             layout->addField(VEngineDescriptorSetFieldType::FieldTypeUniformBuffer, VEngineDescriptorSetFieldStage::FieldStageAll);
             layout->addField(VEngineDescriptorSetFieldType::FieldTypeUniformBuffer, VEngineDescriptorSetFieldStage::FieldStageAll);
             layout->addField(VEngineDescriptorSetFieldType::FieldTypeSampler, VEngineDescriptorSetFieldStage::FieldStageFragment);
 
-            auto vert = vulkan->getShaderFactory()->build(VEngineShaderModuleType::Vertex, "ui.vert.spv");
-            auto frag = vulkan->getShaderFactory()->build(VEngineShaderModuleType::Fragment, "ui.frag.spv");
+            auto vert = toolkit->getShaderFactory()->build(VEngineShaderModuleType::Vertex, "ui.vert.spv");
+            auto frag = toolkit->getShaderFactory()->build(VEngineShaderModuleType::Fragment, "ui.frag.spv");
 
-            stage = vulkan->getRenderStageFactory()->build(width, height, { vert, frag }, { layout },
+            stage = toolkit->getRenderStageFactory()->build(width, height, { vert, frag }, { layout },
                 { outputImage->getAttachment(VEngineAttachmentBlending::Alpha, true,{ { 0.0f, 0.0f, 0.0f, 0.0f } }, false) });
         }
 
@@ -96,9 +96,9 @@ namespace VEngine
             return result;
         }
 
-        VulkanToolkit * UIRenderer::getToolkit()
+        ToolkitInterface * UIRenderer::getToolkit()
         {
-            return vulkan;
+            return toolkit;
         }
 
         uint32_t UIRenderer::getWidth()

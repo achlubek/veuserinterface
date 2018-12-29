@@ -7,7 +7,7 @@ namespace VEngine
         class UIRenderer
         {
         public:
-            UIRenderer(VEngine::Renderer::VulkanToolkit* vulkan, VEngine::Renderer::ImageInterface* outputImage, int width, int height);
+            UIRenderer(VEngine::Renderer::ToolkitInterface* vulkan, VEngine::Renderer::ImageInterface* outputImage, int width, int height);
             ~UIRenderer();
             void draw();
             void addDrawable(IDrawable* drawable);
@@ -16,7 +16,7 @@ namespace VEngine
             void removeAllDrawables();
             std::vector<IDrawable*> rayCast(float x, float y);
 
-            VEngine::Renderer::VulkanToolkit* getToolkit();
+            VEngine::Renderer::ToolkitInterface* getToolkit();
             uint32_t getWidth();
             uint32_t getHeight();
             VEngine::Renderer::DescriptorSetLayoutInterface* getSetLayout();
@@ -27,7 +27,7 @@ namespace VEngine
             VEngine::Renderer::RenderStageInterface * stage{ nullptr };
             std::vector<IDrawable*> drawables;
            // VEngine::Input::MouseInterface* mouse;
-            VEngine::Renderer::VulkanToolkit* vulkan{ nullptr };
+            VEngine::Renderer::ToolkitInterface* toolkit{ nullptr };
             uint32_t width{ 0 }, height{ 0 };
             VEngine::Renderer::DescriptorSetLayoutInterface* layout{ nullptr };
             VEngine::Renderer::ImageInterface* dummyTexture;
