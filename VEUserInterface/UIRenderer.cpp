@@ -29,6 +29,9 @@ namespace VEngine
                 { outputImage->getAttachment(VEngineAttachmentBlending::Alpha, true,{ { 0.0f, 0.0f, 0.0f, 0.0f } }, false) });
         }
 
+        UIRenderer::~UIRenderer()
+        {
+        }
 
         void UIRenderer::draw() {
 
@@ -58,12 +61,12 @@ namespace VEngine
             stage->submitNoSemaphores({});
         }
 
-        void UIRenderer::addDrawable(IDrawable * drawable)
+        void UIRenderer::addDrawable(DrawableInterface * drawable)
         {
             drawables.push_back(drawable);
         }
 
-        void UIRenderer::removeDrawable(IDrawable * drawable)
+        void UIRenderer::removeDrawable(DrawableInterface * drawable)
         {
             auto found = std::find(drawables.begin(), drawables.end(), drawable);
             if (found != drawables.end()) {
@@ -71,7 +74,7 @@ namespace VEngine
             }
         }
 
-        std::vector<IDrawable*> UIRenderer::getDrawables()
+        std::vector<DrawableInterface*> UIRenderer::getDrawables()
         {
             return drawables;
         }
@@ -81,9 +84,9 @@ namespace VEngine
             drawables.clear();
         }
 
-        std::vector<IDrawable*> UIRenderer::rayCast(float x, float y)
+        std::vector<DrawableInterface*> UIRenderer::rayCast(float x, float y)
         {
-            auto result = std::vector<IDrawable*>();
+            auto result = std::vector<DrawableInterface*>();
             for (int a = 0; a < drawables.size(); a++) {
                 if (
                     x > drawables[a]->getX()
@@ -119,10 +122,6 @@ namespace VEngine
         ImageInterface * UIRenderer::getDummyTexture()
         {
             return dummyTexture;
-        }
-
-        UIRenderer::~UIRenderer()
-        {
         }
     }
 }

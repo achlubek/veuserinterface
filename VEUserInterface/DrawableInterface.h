@@ -4,7 +4,7 @@ namespace VEngine
 {
     namespace UserInterface
     {
-        class IDrawable
+        class DrawableInterface
         {
         public:
             virtual void updateBuffer() = 0;

@@ -1,6 +1,6 @@
 #pragma once
 #include "UIColor.h"
-#include "IDrawable.h"
+#include "DrawableInterface.h"
 
 namespace VEngine
 {
@@ -8,7 +8,7 @@ namespace VEngine
     {
         class UIRenderer;
 
-        class UIAbsDrawable : public IDrawable
+        class UIAbsDrawable : public DrawableInterface
         {
         public:
             UIAbsDrawable(UIRenderer* renderer, float x, float y, float width, float height, UIColor icolor);
